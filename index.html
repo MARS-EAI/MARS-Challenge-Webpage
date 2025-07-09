@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICML Embodied Multi-Agent Collaboration Challenge</title>
+    <link rel="icon" type="image/png" href="./assets/favicon.png">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            line-height: 1.7;
+            color: #444;
+            background-color: #f7f8fa; /* A very light grey background */
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* --- HEADER STYLES --- */
+        .header {
+            position: relative; /* Establishes a positioning context for the overlay */
+            text-align: center;
+            padding: 80px 20px; /* Increased padding for more space */
+            margin-bottom: 30px;
+            border-radius: 12px;
+            overflow: hidden; /* Ensures the overlay respects the border-radius */
+            color: #ffffff; /* Sets default text color for header content to white */
+            min-height: 300px;
+            background: url('./assets/bg-photo.png') center/cover no-repeat;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+            z-index: 1; /* Places the overlay above the background image */
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 200px; 
+        }
+
+        .header h1 {
+            font-size: 3.2em;
+            font-weight: 700;
+            color: #ffffff; 
+            margin: 0;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.7); 
+        }
+        .header p {
+            font-size: 1.2em;
+            color: #f0f0f0; 
+            margin-top: 10px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+        }
+        .header a {
+            color: #fff; 
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        .header a:hover {
+            text-decoration: none;
+        }
+
+        /* --- NAVIGATION STYLES --- */
+        .nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .nav a:hover {
+            background-color: #D99441;
+            color: #fff;
+        }
+
+        /* --- CARD STYLES --- */
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 35px 40px;
+            margin-bottom: 30px;
+
+            border: 1px solid #e9ecef;
+        }
+        .card h2 {
+            font-size: 2em;
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #D99441;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .card p, .card li {
+            font-size: 1.05em;
+            color: #222;
+            text-align: left;
+        }
+        .card strong {
+            color: #111;
+        }
+        .card ul {
+            padding-left: 25px;
+            margin-top: 15px;
+        }
+        .card ul li {
+            margin-bottom: 10px;
+        }
+        
+        .join-button {
+            display: inline-block;
+            background-color: #D99441;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .join-button:hover {
+            background-color: #b87d38;
+            transform: translateY(-2px);
+        }
+
+        /* --- ORGANIZERS STYLES --- */
+        .organizers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        .organizer-item img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+           
+        }
+        .organizer-item .name {
+            font-weight: 600;
+            color: #222;
+            margin: 0;
+            text-align: center;
+        }
+        .organizer-item .affiliation {
+            font-size: 0.9em;
+            color: #333;
+            margin: 5px 0 0 0;
+            text-align: center;
+        }
+
+        /* --- FOOTER STYLES --- */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #333;
+        }
+        /* --- TIMELINE STYLES --- */
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 20px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background-color: #e9ecef;
+            z-index: 1;
+        }
+        .timeline-event {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 25%;
+        }
+        .timeline-event .dot {
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            border: 4px solid  #2D3A7F;
+            border-radius: 50%;
+            margin: 0 auto;
+            margin-bottom: 15px;
+        }
+        .timeline-event.active .dot {
+            background-color:  #2D3A7F;
+        }
+        .timeline-event .date {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #222;
+        }
+        .timeline-event .description {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header class="header">
+            <div class="header-content">
+                <h1>Multi-Agent Embodied<br>Intelligence Challenge</h1>
+                <p>Challenge at the <a href="https://mas-2025.github.io/MAS-2025/" target="_blank">ICML 2025 MAS Workshop</a></p>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <a href="#introduction">Home</a>
+            <a href="#timeline">Timeline</a>
+            <a href="#track1">Track 1: Planning</a>
+            <a href="#track2">Track 2: Control</a>
+            <a href="#contact">Contact</a>
+            <a href="#organizers">Organizers</a>
+        </nav>
+
+        <main>
+            <div id="introduction" class="card">
+                <h2>Introduction</h2>
+                <p>
+                    With the emergence of embodied multi-agent systems in robotics, enabling collaboration among heterogeneous agents—such as humanoids, quadrupeds, and manipulators—has become a fundamental step toward achieving general-purpose, real-world autonomy. These agents must not only coordinate high-level plans but also execute them robustly in complex physical environments.
+                </p>
+                <p>
+                    However, bridging the gap between symbolic planning and continuous control across multiple bodies poses significant challenges, especially when agents possess diverse capabilities and partial observations.
+                </p>
+                <p>
+                    This challenge aims to promote research on this topic through two distinct yet complementary tracks. By decoupling planning and control, we aim to explore the planning capabilities of vision-language models (VLMs), while also investigating the potential of end-to-end models for coordinated control across multiple robotic arms.
+                </p>
+                <p>
+                    <b>If you are interested in this challenge, please fill out the form below.</b> We will release registration information and provide updates about the competition soon.
+                </p>
+                <a href="https://forms.gle/qug9Ju7nXxLdExJ57" class="join-button" target="_blank">Join our Mailing List!</a>
+            </div>
+
+            <div id="timeline" class="card">
+                <h2>Timeline</h2>
+                <div class="timeline-container">
+                    <div class="timeline-event active">
+                        <div class="dot"></div>
+                        <p class="date">July 15, 2025</p>
+                        <p class="description">Pre-registration Opens</p>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="dot"></div>
+                        <p class="date">August 1, 2025</p>
+                        <p class="description">Warm-up Round Begins</p>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="dot"></div>
+                        <p class="date">September 1, 2025</p>
+                        <p class="description">Official Round Starts</p>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="dot"></div>
+                        <p class="date">October 31, 2025</p>
+                        <p class="description">Official Round Ends</p>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="dot"></div>
+                        <p class="date">December 2025</p>
+                        <p class="description">Result Announcement & Award Ceremony</p>
+                    </div>
+                </div>
+            </div>            
+            
+            <div id="track1" class="card">
+                <h2>Track 1: Multi-Agent Embodied Planning</h2>
+                <p>
+                    This track focuses on <strong>high-level task planning</strong> across heterogeneous embodied agents. Built upon the <strong><a href="https://www.maniskill.ai/" style="color: #111; text-decoration: underline;">ManiSkill</a></strong> platform and <strong><a href="https://robocasa.ai/" style="color: #111; text-decoration: underline;">RoboCasa </a></strong>dataset, we curate a set of task scenarios involving diverse robot embodiments and complex collaborative goals. Given a structured scene image with multiple candidate agents (humanoids, quadrupeds, manipulators), participants need to complete the following two tasks:
+                </p>
+                <ul>
+                    <li>Select Agents: Choose a subset of appropriate agents from the scene based on a natural language command.</li>
+                    <li>Assign Actions: Define a sequence of high-level actions for each selected agent to accomplish the collaborative task.</li>
+                </ul>
+                <p>
+                    This task evaluates the vision large language model's ability to reason over multi-agent allocation, role assignment, and symbolic planning, simulating real-world cooperation among diverse robots.
+                </p>
+                
+                
+            </div>
+
+
+            <div id="track2" class="card">
+                <h2>Track 2: Policy Execution for Multi-Agent Control</h2>
+                <p>
+                    This track focuses on <strong>low-level policy execution</strong> in physically realistic simulation environments. It utilizes <strong><a href="https://iranqin.github.io/robofactory/" style="color: #111; text-decoration: underline;">RoboFactory</a></strong>, a simulation benchmark for embodied agents. Participants are required to deploy and control multiple embodied agents (e.g., robotic arms) to collaboratively complete manipulation-centric tasks like block stacking.
+                </p>
+                 <p>
+                    Each task is an episode where agents interact with dynamic objects in a shared workspace under partial observability and randomized conditions. The core challenge lies in achieving robust, learned coordination across multiple agents.
+                </p>
+                
+            </div>
+
+            <div id="contact" class="card">
+                <h2>Contact</h2>
+                <p>
+                    For any inquiries or further information, please contact us at <b><a href="mailto:icmlmarschallenge@gmail.com" style="color: #111; text-decoration: underline;">icmlmarschallenge@gmail.com</a></b>.
+                </p>
+            </div>
+
+            <div id="organizers" class="card">
+                <h2>Organizers</h2>
+                <div class="organizers-grid">
+                    <!-- Organizer 1 -->
+                    <a href="https://faceong.github.io/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/lk-photo.jpg" alt="Li Kang Photo">
+                            <p class="name">Li Kang</p>
+                            <p class="affiliation">Shanghai Jiao Tong University</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 2 -->
+                    <a href="https://github.com/IranQin" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/yq-photo.png" alt="Yiran Qin Photo">
+                            <p class="name">Yiran Qin</p>
+                            <p class="affiliation">The University of Oxford</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 3 -->
+                    <a href="https://ziyeeee.github.io/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/zw-photo.jpg" alt="Ziye Wang Photo">
+                            <p class="name">Ziye Wang</p>
+                            <p class="affiliation">The University of Hong Kong</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 4 -->
+                    <a href="https://henggg.cn/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/hz-photo.jpg" alt="Heng Zhou Photo">
+                            <p class="name">Heng Zhou</p>
+                            <p class="affiliation">The University of Science and Technology of China</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 5 -->
+                    <a href="https://rui-li023.github.io/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/rl-photo.jpg" alt="Rui Li Photo">
+                            <p class="name">Rui Li</p>
+                            <p class="affiliation">Shanghai Artificial Intelligence Laboratory</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 6 -->
+                    <a href="https://scholar.google.com/citations?user=qO93EgIAAAAJ&hl=en" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/xs-photo.jpg" alt="Xiufeng Song Photo">
+                            <p class="name">Xiufeng Song</p>
+                            <p class="affiliation">Shanghai Jiao Tong University</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 7 -->
+                    <a href="https://github.com/nybchen" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/bc-photo.jpg" alt="Bruno Chen Photo">
+                            <p class="name">Bruno Chen</p>
+                            <p class="affiliation">Carnegie Mellon University</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 8 -->
+                    <a href="https://yinzhenfei.github.io/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/zy-photo.png" alt="Zhenfei Yin Photo">
+                            <p class="name">Zhenfei Yin</p>
+                            <p class="affiliation">The University of Oxford</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 9 -->
+                    <a href="http://www.zhangruimao.site/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/rz-photo.png" alt="Ruimao Zhang Photo">
+                            <p class="name">Ruimao Zhang</p>
+                            <p class="affiliation">Sun Yat-sen University</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 10 -->
+                    <a href="http://leibai.site/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/lb-photo.png" alt="Lei Bai Photo">
+                            <p class="name">Lei Bai</p>
+                            <p class="affiliation">Shanghai Artificial Intelligence Laboratory</p>
+                        </div>
+                    </a>
+                    <!-- Organizer 11 -->
+                    <a href="https://www.robots.ox.ac.uk/~phst/" target="_blank" style="color: inherit; text-decoration: none;">
+                        <div class="organizer-item">
+                            <img src="./assets/pt-photo.jpg" alt="Philip Torr Photo">
+                            <p class="name">Philip Torr</p>
+                            <p class="affiliation">The University of Oxford</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+        </main>
+
+        <footer class="footer">
+            <p>&copy;2025 Multi-Agent Embodied Intelligence Challenge Organizers. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
