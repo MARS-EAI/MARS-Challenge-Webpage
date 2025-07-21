@@ -233,6 +233,79 @@
             text-align: center;
             color: #333;
         }
+        .join-button2 {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #f97316; /* Orange */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.25s ease;
+        }
+
+        .join-button:hover {
+            background-color: #ea580c;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            padding: 20px 25px;
+            z-index: 1001;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 300px;
+        }
+
+        .popup p {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .qr-image {
+            width: 220px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .close-button {
+            margin-top: 15px;
+            padding: 8px 14px;
+            border: none;
+            background-color: #e5e7eb;
+            color: #111827;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.25s;
+        }
+
+        .close-button:hover {
+            background-color: #d1d5db;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -271,7 +344,17 @@
                     <b>If you are interested in this challenge, please fill out the form below.</b> We will release registration information and provide updates about the competition soon.
                 </p>
                 <a href="https://forms.gle/qug9Ju7nXxLdExJ57" class="join-button" target="_blank">Join our Mailing List!</a>
-                <a href="https://discord.com/invite/uu8QzYDFcg" class="join-button" target="_blank" style="margin-left: 15px;">Hop in Discord^_^</a>
+                <a href="https://discord.com/invite/uu8QzYDFcg" class="join-button" target="_blank" style="margin-left: 15px;">Hop in Discord</a>
+                <!-- New Button -->
+                <a href="javascript:void(0);" class="join-button wechat-button" onclick="showWeChatQRCode()" style="margin-left: 15px;">Join WeChat Group</a>
+
+                <!-- Scan the QR code -->
+                <div id="wechat-overlay" class="overlay" onclick="hideWeChatQRCode()"></div>
+                <div id="wechat-popup" class="popup">
+                    <p>Scan to Join Our WeChat Group 👇</p>
+                    <img src="assets/wechat_qrcode.png" alt="WeChat QR Code" class="qr-image"><br>
+                    <button class="close-button" onclick="hideWeChatQRCode()">Close</button>
+                </div>
             </div>
 
             <div id="timeline" class="card">
@@ -463,6 +546,15 @@
         </footer>
 
     </div>
-
+    <script>
+        function showWeChatQRCode() {
+            document.getElementById('wechat-popup').style.display = 'block';
+            document.getElementById('wechat-overlay').style.display = 'block';
+        }
+        function hideWeChatQRCode() {
+            document.getElementById('wechat-popup').style.display = 'none';
+            document.getElementById('wechat-overlay').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
